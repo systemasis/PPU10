@@ -1,7 +1,6 @@
 #include "polling.h"
 
 int main (int argc,char **argv){
-
 	if(argc < 4){
 		perror("Au moins 3 paramètres attendus");
 		exit(1);
