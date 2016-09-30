@@ -37,34 +37,15 @@ int main (int argc,char *argv[]){
 	char *primaire = argv[1], *secondaire = argv[2], *trafic = argv[3], *string_state = string_idle,
 	*prefixe_fichier = NULL; // Retirer cette ligne cause la levée d'une erreur lors de la compilation
 
-	int i, state = IDLE, numero_station = 1, pid, ppid = getpid(), pid_St[NB_STATIONS];
+	int i, state = IDLE, numero_station = 1, pid;
 	// On ne convertit pas en int car il faudrait les cast à nouveau en char pour les remettre en argument
 	// des exec
 	char *n = argv[4], //nombre de station
 	*nb_polling = argv[5], *delai_polling = argv[6], *delai_min_requete = argv[7],
-	*delai_max_requete = argv[8];
+	*delai_max_requete = argv[8], iStr[10], ppid[10], pid_St[NB_STATIONS][10];
 
-	//TODO DÉGAGE
-	// printf("coucou3\n");fflush(stdout);
-	//
-	// // Initialisation des arguments généraux aux stations secondaires
-	// char **sargs;
-	// // sargs = malloc(sizeof(SECONDAIREARGS));
-	// sargs[SECONDAIRE_PID_PRIMAIRE] = (char *)&pid;
-	// sargs[SECONDAIRE_PROGRAMME] = secondaire;
-	//
-	// //TODO DÉGAGE
-	// printf("coucou4\n");fflush(stdout);
-	//
-	// // Initialisation des arguments généraux aux générateurs de requête
-	// char **targs;
-	// // targs = malloc(sizeof(TRAFICARGS));
-	// targs[TRAFIC_DELAI_MIN_REQUETE] = delai_min_requete;
-	// targs[TRAFIC_DELAI_MAX_REQUETE] = delai_max_requete;
-	// targs[TRAFIC_PROGRAMME]= trafic;
-
-	//TODO DÉGAGE
-	// printf("%s, %s\n", sargs->programme, targs->programme);fflush(stdout);
+	// Injecte le pid dans une chaîne de caractères pour l'utiliser avec l'exec
+	snprintf(ppid, sizeof(ppid), "%d", getpid());
 
 	if(argc == 10){
 		prefixe_fichier = argv[9];
@@ -80,22 +61,18 @@ int main (int argc,char *argv[]){
 	}
 
 	for(i= NB_STATIONS - atoi(n); i<NB_STATIONS; i++){
+		snprintf(iStr, sizeof(iStr), "%d", i);
 		// Création d'une station secondaire
 		if((pid=fork()) == 0){
-			execl(secondaire, secondaire, (char*) &i, (char *) &ppid, (char *) NULL);
+			execl(secondaire, secondaire, iStr, ppid, (char *) NULL);
 			perror("Erreur d'execl pour le secondaire");
 			exit(1);
 		}else{
-			pid_St[i] = pid;
+			snprintf(pid_St[i], sizeof(pid_St[i]), "%d", pid);
 
 			// Création d'un générateur de requête
 			if((pid = fork()) == 0){
-				// targs[TRAFIC_I]= (char *)&i;
-				// targs[TRAFIC_PID_STI] = (char *)&pid_St[i];
-				//
-				// execv(targs[TRAFIC_PROGRAMME], targs);
-
-				execl(trafic, trafic, (char *) &i, (char *) &pid_St[i], delai_min_requete, delai_max_requete, (char *) NULL);
+				execl(trafic, trafic, iStr, pid_St[i], delai_min_requete, delai_max_requete, (char *) NULL);
 				perror("Erreur d'execl pour le trafic");
 				exit(1);
 			}
@@ -109,7 +86,7 @@ int main (int argc,char *argv[]){
 	printf(".\n");
 
 	// Création de la station primaire
-	// execl(*primaire, *primaire, nb_polling, delai_polling, n, pid_St[0], pid_St[1], pid_St[2], pid_St[3], pid_St[4], NULL);
+	execl(primaire, primaire, nb_polling, delai_polling, n, pid_St[0], pid_St[1], pid_St[2], pid_St[3], pid_St[4], NULL);
 
 	return(EXIT_SUCCESS);
 }
