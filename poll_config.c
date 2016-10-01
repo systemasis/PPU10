@@ -1,28 +1,5 @@
 #include "polling.h"
-
-#define NB_STATIONS 5
-#define SECONDAIRE_N 0
-#define SECONDAIRE_PID_PRIMAIRE 1
-#define SECONDAIRE_PROGRAMME 2
-#define TRAFIC_I 0
-#define TRAFIC_PID_STI 1
-#define TRAFIC_DELAI_MIN_REQUETE 2
-#define TRAFIC_DELAI_MAX_REQUETE 3
-#define TRAFIC_PROGRAMME 4
-
-typedef struct secondaireArgs {
-	int n;
-	int pid_primaire;
-	char *programme;
-} SECONDAIREARGS;
-
-typedef struct traficArgs {
-	int i;
-	int pid_Sti;
-	int delai_min_requete;
-	int delai_max_requete;
-	char *programme;
-} TRAFICARGS;
+#include "header.h"
 
 int main (int argc,char *argv[]){
 	if (argc < 9) {

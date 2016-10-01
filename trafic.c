@@ -1,4 +1,5 @@
 #include "polling.h"
+#include "header.h"
 
 //traffic
 int main (int argc, char **argv){
