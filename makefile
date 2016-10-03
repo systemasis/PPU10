@@ -1,11 +1,15 @@
 poll_config: primaire secondaire trafic
-	gcc -o poll_config poll_config.c
+	mkdir -p bin
+	gcc -o bin/poll_config src/poll_config.c
 
-primaire: primaire.c
-	gcc -o primaire primaire.c
+primaire: src/primaire.c
+	mkdir -p bin
+	gcc -o bin/primaire src/primaire.c
 
-secondaire: secondaire.c
-	gcc -o secondaire secondaire.c
+secondaire: src/secondaire.c
+	mkdir -p bin
+	gcc -o bin/secondaire src/secondaire.c
 
-trafic: trafic.c
-	gcc -o trafic trafic.c
+trafic: src/trafic.c
+	mkdir -p bin
+	gcc -o bin/trafic src/trafic.c
