@@ -10,10 +10,17 @@ int main (int argc,char *argv[]){
 
 	int n = atoi(argv[1]), pid_primaire = atoi(argv[2]),
 	nb_data_req_rx =0, tab=((3*n)), i;
+	char *prefixe_fichier;
+
+	if(getenv("PREFIXE") != NULL){
+		prefixe_fichier = malloc(4+sizeof(getenv("PREFIXE")));
+		snprintf(prefixe_fichier, sizeof(prefixe_fichier), "%s", getenv("PREFIXE"));
+		sprintf(prefixe_fichier + strlen(prefixe_fichier), "_St");
+		sprintf(prefixe_fichier + strlen(prefixe_fichier), "%s", argv[1]);
+		stdout = fopen(prefixe_fichier, "w+");
+	}
 
 	printf("Je suis secondaire%d, mes paramètres sont : n=%d, pid_primaire=%d.\n", n, n, pid_primaire);
-
-	sleep(60);
 
 	// for(i=0;i<=tab;i++)
 	// 	printf("\t");

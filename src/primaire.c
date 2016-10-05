@@ -9,6 +9,14 @@ int main (int argc,char **argv){
 
 	int nb_polling = atoi(argv[1]), delai_poll = atoi(argv[2]),
 	n = atoi(argv[3]), nb_req_rx = 0, i;
+	char *prefixe_fichier;
+
+	if(getenv("PREFIXE") != NULL){
+		prefixe_fichier = malloc(4+sizeof(getenv("PREFIXE")));
+		snprintf(prefixe_fichier, sizeof(prefixe_fichier), "%s", getenv("PREFIXE"));
+		sprintf(prefixe_fichier + strlen(prefixe_fichier), "_prim");
+		stdout = fopen(prefixe_fichier, "w+");
+	}
 
 	printf("Je suis primaire, mes paramètres sont : nb_polling=%d, delai_poll=%d, n=%d", nb_polling, delai_poll, n);
 
@@ -17,8 +25,6 @@ int main (int argc,char **argv){
 	}
 
 	printf(".\n");
-
-	sleep(60);
 
 	// for(i=0;i<=n;i++){
 	// 	switch(state){

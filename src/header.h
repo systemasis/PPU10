@@ -1,3 +1,6 @@
+#include "utils.h"
+#include <string.h>
+
 #define NB_STATIONS 5
 #define SECONDAIRE_N 0
 #define SECONDAIRE_PID_PRIMAIRE 1

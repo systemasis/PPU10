@@ -22,8 +22,6 @@ int main (int argc, char **argv){
 
 	printf("Je suis trafic, mes paramètres sont : i=%i, pid_St%d=%d, delai_min_requete=%d, delai_max_requete=%d.\n", i, i, pid_Sti, delai_min_requete, delai_max_requete);
 
-	sleep(60);
-
 	// switch(state){
 	// 	case(7):
 	//
