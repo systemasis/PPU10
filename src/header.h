@@ -7,3 +7,5 @@
 #define TRAFIC_DELAI_MIN_REQUETE 2
 #define TRAFIC_DELAI_MAX_REQUETE 3
 #define TRAFIC_PROGRAMME 4
+
+int min(int a, int b);

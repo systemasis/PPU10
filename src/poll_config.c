@@ -37,10 +37,13 @@ int main (int argc,char *argv[]){
 		exit(1);
 	}
 
-	for(i= NB_STATIONS - atoi(n); i<NB_STATIONS; i++){
+	for(i=1; i <= min(atoi(n), NB_STATIONS); i++){
 		snprintf(iStr, sizeof(iStr), "%d", i);
 		// Création d'une station secondaire
 		if((pid=fork()) == 0){
+			// stdout = fopen(*prefixe_fichier+"_st"+*iStr, "a");
+			printf("Je créé la station secondaire %s\n", iStr);
+			fflush(stdout);
 			execl(secondaire, secondaire, iStr, ppid, (char *) NULL);
 			perror("Erreur d'execl pour le secondaire");
 			exit(1);
@@ -64,6 +67,14 @@ int main (int argc,char *argv[]){
 
 	// Création de la station primaire
 	execl(primaire, primaire, nb_polling, delai_polling, n, pid_St[0], pid_St[1], pid_St[2], pid_St[3], pid_St[4], NULL);
+	perror("Erreur d'execl pour le primaire");
+	exit(1);
+}
 
-	return(EXIT_SUCCESS);
+int min(int a, int b){
+	if(a >= b){
+		return b;
+	}else{
+		return a;
+	}
 }
