@@ -7,7 +7,7 @@
 #ifndef EXIT_H
 
     #define EXIT_H
-    	
+
     #include <unistd.h>
     #include <stdlib.h>
     #include <stdio.h>
@@ -48,14 +48,9 @@ char *string_w_poll  = "W_POLL";
 char *string_bc_data = "BC_DATA";
 char *string_sd_data = "SD_DATA";
 
-//valeur global
-int state;
-char *string_state;
-
 // -----------------------------------------------------
     void erreur (char *message) {
 // -----------------------------------------------------
     perror(message);
     exit (EXIT_FAILURE);
 } // erreur
-
