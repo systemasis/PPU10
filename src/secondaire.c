@@ -28,34 +28,24 @@ int main (int argc,char *argv[]){
 		snprintf(prefixe_fichier, sizeof(prefixe_fichier), "%s", getenv("PREFIXE"));
 		sprintf(prefixe_fichier + strlen(prefixe_fichier), "_St");
 		sprintf(prefixe_fichier + strlen(prefixe_fichier), "%s", argv[1]);
-		stdout = fopen(prefixe_fichier, "w+");
+		stdout = fopen(prefixe_fichier, "a");
 	}
 
     state = IDLE;
     string_state = string_idle;
 
-    // TODO DEGAGE
-    // printf("SECONDAIRE state = %d et string_state = %s\n", state, string_state);
-
-	// printf("Je suis secondaire%d, mes paramètres sont : n=%d, pid_primaire=%d.\n", n, n, pid_primaire);
-
-
-	//
-	// printf("%d",n);
-
-
 	for EVER{
 		switch(state){
 			case IDLE:
 				printState();
-				printf("\n");
+				fprintf(stdout, "\n");
 				signal(DATA_RX, receptionDonnee);
 				signal(DATA_REQ_RX, requeteEmission);
 				pause();
 			break;
 			case W_POLL:
 				printState();
-				printf(" Attente\n");
+				fprintf(stdout, " Attente\n");
 				signal(DATA_RX, receptionDonnee);
 				signal(DATA_REQ_RX, requeteEmission);
 				signal(POLL_RX, invitationEmission);
@@ -63,7 +53,7 @@ int main (int argc,char *argv[]){
 			break;
 			case SD_DATA:
 				printState();
-				printf("\n");
+				fprintf(stdout, "\n");
 				signal(DATA_RX, receptionDonnee);
 				kill(pid_primaire, DATA_TX);
 				state = W_ACK;
@@ -71,7 +61,7 @@ int main (int argc,char *argv[]){
 			break;
 			case W_ACK:
 				printState();
-				printf("\n");
+				fprintf(stdout, "\n");
 				signal(DATA_RX, receptionDonnee);
 				signal(ACK_RX, receptionAcquittement);
 				pause();
@@ -84,7 +74,7 @@ int main (int argc,char *argv[]){
 
 void invitationEmission(){
 	printState();
-	printf(" Poll_Rx\n");
+	fprintf(stdout, " Poll_Rx\n");
 	state = SD_DATA;
 	string_state = string_sd_data;
 }
@@ -93,9 +83,9 @@ void printState(){
 	int i;
 
 	for(i=0;i<=tab;i++)
-		printf("\t");
+		fprintf(stdout, "\t");
 
-	printf("St%d %s", n, string_state);
+	fprintf(stdout, "St%d %s", n, string_state);
 }
 
 void receptionAcquittement(){
@@ -109,12 +99,12 @@ void receptionAcquittement(){
 		state = IDLE;
 		string_state = string_idle;
 	}
-	printf(" Ack_Rx %d\n", nb_data_req_rx);
+	fprintf(stdout, " Ack_Rx %d\n", nb_data_req_rx);
 }
 
 void receptionDonnee(int sig){
 	printState();
-	printf(" Data_rx\n");
+	fprintf(stdout, " Data_rx\n");
 }
 
 void requeteEmission(){
@@ -124,5 +114,5 @@ void requeteEmission(){
 		string_state = string_w_poll;
 	}
 	nb_data_req_rx++;
-	printf(" Data_Req_Rx %d\n", nb_data_req_rx);
+	fprintf(stdout, " Data_Req_Rx %d\n", nb_data_req_rx);
 }

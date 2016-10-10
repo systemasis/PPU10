@@ -43,10 +43,9 @@ int main (int argc,char *argv[]){
 
 	for(i=1; i <= min(atoi(n), MAX_ST); i++){
 		snprintf(iStr, sizeof(iStr), "%d", i);
+
 		// Création d'une station secondaire
 		if((pid=fork()) == 0){
-			//TODO DEGAGE
-			// stdout = fopen(*prefixe_fichier+"_st"+*iStr, "a");
 			execle(secondaire, secondaire, iStr, ppid, (char *) 0, my_env);
 			perror("Erreur d'execl pour le secondaire");
 			exit(1);
@@ -61,12 +60,6 @@ int main (int argc,char *argv[]){
 			}
 		}
 	}
-
-	printf("Je suis poll_config, mes paramètres sont: primaire=%s, secondaire=%s, trafic=%s, n=%s, nb_polling=%s, delai_polling=%s, delai_min_requete=%s, delai_max_requete=%s", primaire, secondaire, trafic, n, nb_polling, delai_polling, delai_min_requete, delai_max_requete);
-	if(argc == 10){
-		printf(", prefixe_fichier=%s", my_env[0]);
-	}
-	printf(".\n");
 
 	// Création de la station primaire
 	execle(primaire, primaire, nb_polling, delai_polling, n, pid_St[0], pid_St[1], pid_St[2], pid_St[3], pid_St[4], NULL, my_env);

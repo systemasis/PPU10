@@ -20,10 +20,7 @@ int main (int argc, char **argv){
 		perror("Le délai minimum ne doit pas dépasser le délai maximum");
 		exit(1);
 	}
-
-	// printf("Je suis trafic, mes paramètres sont : i=%i, pid_St%d=%d, delai_min_requete=%d, delai_max_requete=%d.\n", i, i, pid_Sti, delai_min_requete, delai_max_requete);
 	srand(i);
-	// for EVER{
 	for EVER{
 		delai = rand()%(delai_max_requete - delai_min_requete)+delai_min_requete;
 		sleep(delai);
