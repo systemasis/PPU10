@@ -14,19 +14,21 @@ int main (int argc, char **argv){
 	// delai minimun et max entre deux requete pour une meme station
 	int delai_min_requete = atoi(argv[3]); 	//>0
 	int delai_max_requete = atoi(argv[4]);	//>=delai_min_requete
+	int delai = 0;
 
 	if(delai_min_requete > delai_max_requete){
 		perror("Le délai minimum ne doit pas dépasser le délai maximum");
 		exit(1);
 	}
 
-	printf("Je suis trafic, mes paramètres sont : i=%i, pid_St%d=%d, delai_min_requete=%d, delai_max_requete=%d.\n", i, i, pid_Sti, delai_min_requete, delai_max_requete);
-
-	// switch(state){
-	// 	case(7):
-	//
-	// 	break;
-	// }
+	// printf("Je suis trafic, mes paramètres sont : i=%i, pid_St%d=%d, delai_min_requete=%d, delai_max_requete=%d.\n", i, i, pid_Sti, delai_min_requete, delai_max_requete);
+	srand(i);
+	// for EVER{
+	for EVER{
+		delai = rand()%(delai_max_requete - delai_min_requete)+delai_min_requete;
+		sleep(delai);
+		kill(pid_Sti, DATA_REQ_TX);
+	}
 
 	return(EXIT_SUCCESS);
 }

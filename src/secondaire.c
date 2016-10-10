@@ -55,7 +55,7 @@ int main (int argc,char *argv[]){
 			break;
 			case W_POLL:
 				printState();
-				printf("Attente\n");
+				printf(" Attente\n");
 				signal(DATA_RX, receptionDonnee);
 				signal(DATA_REQ_RX, requeteEmission);
 				signal(POLL_RX, invitationEmission);
@@ -65,8 +65,9 @@ int main (int argc,char *argv[]){
 				printState();
 				printf("\n");
 				signal(DATA_RX, receptionDonnee);
-
-				pause();
+				kill(pid_primaire, DATA_TX);
+				state = W_ACK;
+				string_state = string_w_ack;
 			break;
 			case W_ACK:
 				printState();
@@ -83,7 +84,7 @@ int main (int argc,char *argv[]){
 
 void invitationEmission(){
 	printState();
-	printf("Poll_Rx\n");
+	printf(" Poll_Rx\n");
 	state = SD_DATA;
 	string_state = string_sd_data;
 }
@@ -99,17 +100,16 @@ void printState(){
 
 void receptionAcquittement(){
 	printState();
-	printf(" Ack_Rx %d\n", nb_data_req_rx);
 	if(nb_data_req_rx > 0){
 		nb_data_req_rx--;
+		state = W_POLL;
+		string_state = string_w_poll;
 	}
 	if(nb_data_req_rx == 0){
 		state = IDLE;
 		string_state = string_idle;
-	}else{
-		state = W_POLL;
-		string_state = string_w_poll;
 	}
+	printf(" Ack_Rx %d\n", nb_data_req_rx);
 }
 
 void receptionDonnee(int sig){
@@ -119,10 +119,10 @@ void receptionDonnee(int sig){
 
 void requeteEmission(){
 	printState();
-	printf(" Data_Req_Rx %d\n", nb_data_req_rx);
 	if(state == IDLE){
 		state = W_POLL;
 		string_state = string_w_poll;
 	}
 	nb_data_req_rx++;
+	printf(" Data_Req_Rx %d\n", nb_data_req_rx);
 }
