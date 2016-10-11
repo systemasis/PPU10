@@ -35,6 +35,7 @@ int main (int argc,char *argv[]){
     string_state = string_idle;
 
 	for EVER{
+		fflush(stdout);
 		switch(state){
 			case IDLE:
 				printState();
