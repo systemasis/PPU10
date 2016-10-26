@@ -1,6 +1,11 @@
 #include "polling.h"
 #include "header.h"
 
+
+void arriverData();
+
+int  nb_data_req_rx = 0;
+
 int main (int argc,char **argv){
 	if(argc < 4){
 		perror("Au moins 3 paramètres attendus");
@@ -8,8 +13,18 @@ int main (int argc,char **argv){
 	}
 
 	int nb_polling = atoi(argv[1]), delai_poll = atoi(argv[2]),
-	n = atoi(argv[3]), nb_req_rx = 0, i;
+		n = atoi(argv[3]), nb_req_rx = 0, 
+		i,j,compteur,p;
 	char *prefixe_fichier;
+	int nombre_pid=0;
+	
+	for(i=0;i<5;i++){
+		if(atoi(argv[4+i])!=NULL)nombre_pid++;	
+	}
+	int tab_secondaire[nombre_pid];
+	for(i=0;i<nombre_pid;i++){
+		tab_secondaire[i]=atoi(argv[4+i]);
+	}
 
 	if(getenv("PREFIXE") != NULL){
 		prefixe_fichier = malloc(4+sizeof(getenv("PREFIXE")));
@@ -23,22 +38,63 @@ int main (int argc,char **argv){
 	for(i=4; i<argc;i++){
 		printf(", pid_St%d=%d", i, atoi(argv[i]));
 	}
-
 	printf(".\n");
-
-	// for(i=0;i<=n;i++){
-	// 	switch(state){
-	// 		case 2: //w__req
-	// 			printf("Prim %s st%d %ds \n",string_state,i,delai_poll);
-	//
-	//
-	// 		break;
-	// 		case 5: // bc_data
-	// 			printf("Prim %s st%d \n",string_state,i);
-	//
-	// 		break;
-	// 	}
-	// }
+	
+	state=W_REQ;
+	string_state=string_w_req;
+	for (i=0; i<nb_polling;i++){
+		//parcour le tableau des pid secondaire			
+		for(j=0;j<nombre_pid;j++){
+			if(kill(tab_secondaire[j],POLL_TX )==0){
+				switch(state){
+					case W_REQ:
+						printIni(j);
+						printf(" %ds\n",delai_poll);
+						signal(DATA_RX,arriverData);
+						sleep(delai_poll);//permet d attendre t s
+						signal(DATA_RX,SIG_IGN);
+						if(nb_data_req_rx==1){
+							printIni(j);
+							printf(" Data_RX\n");
+							state=BC_DATA;
+							string_state =  string_bc_data;
+						}
+						else{
+							printIni(j);
+							printf(" N_Data\n");
+						}
+					break;
+					case BC_DATA:
+						printIni(j);
+						printf("\n");
+						for(p=0;p<nombre_pid;p++){
+							kill(tab_secondaire[j],DATA_TX);						
+						}						
+						kill(tab_secondaire[j], ACK_TX  );					
+			
+						state=W_REQ;
+						string_state=string_w_req;
+						nb_data_req_rx = 0;
+						
+					break;
+									
+				}//switch des etats
+				
+			}//sign bien envoyer a chaque station secondaire
+			else{
+				perror("probleme a l'envoie du signal POLL_TX");
+				exit(1);			
+			}
+		}					
+	}
 
 	return(EXIT_SUCCESS);
+}
+
+
+void arriverData(){
+	nb_data_req_rx = 1;	
+}
+void printIni(int valeur ){
+	printf("Prim %s st%d",string_state,valeur);
 }
