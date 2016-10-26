@@ -47,26 +47,27 @@ int main (int argc,char **argv){
 		for(j=0;j<nombre_pid;j++){
 			if(kill(tab_secondaire[j],POLL_TX )==0){
 				switch(state){
+					fflush(stdout);
 					case W_REQ:
 						printIni(j);
-						printf(" %ds\n",delai_poll);
+						fprintf(stdout," %ds\n",delai_poll);
 						signal(DATA_RX,arriverData);
 						sleep(delai_poll);//permet d attendre t s
 						signal(DATA_RX,SIG_IGN);
 						if(nb_data_req_rx==1){
 							printIni(j);
-							printf(" Data_RX\n");
+							fprintf(stdout," Data_RX\n");
 							state=BC_DATA;
 							string_state =  string_bc_data;
 						}
 						else{
 							printIni(j);
-							printf(" N_Data\n");
+							fprintf(stdout," N_Data\n");
 						}
 					break;
 					case BC_DATA:
 						printIni(j);
-						printf("\n");
+						fprintf(stdout,"\n");
 						for(p=0;p<nombre_pid;p++){
 							kill(tab_secondaire[j],DATA_TX);						
 						}						
@@ -96,5 +97,5 @@ void arriverData(){
 	nb_data_req_rx = 1;	
 }
 void printIni(int valeur ){
-	printf("Prim %s st%d",string_state,valeur);
+	fprintf(stdout,"Prim %s st%d",string_state,valeur);
 }
