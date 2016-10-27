@@ -6,6 +6,10 @@ void printState();
 void receptionDonnee();
 void requeteEmission();
 void receptionAcquittement();
+void rien(){
+	printState();
+	printf(" Il ne se passe rien\n");
+};
 
 int n = 0, pid_primaire = 0, tab=0, nb_data_req_rx = 0;
 
@@ -42,6 +46,8 @@ int main (int argc,char *argv[]){
 				fprintf(stdout, "\n");
 				signal(DATA_RX, receptionDonnee);
 				signal(DATA_REQ_RX, requeteEmission);
+				// signal(POLL_RX, rien);
+				signal(POLL_RX, SIG_IGN);
 				pause();
 			break;
 			case W_POLL:
@@ -65,6 +71,7 @@ int main (int argc,char *argv[]){
 				fprintf(stdout, "\n");
 				signal(DATA_RX, receptionDonnee);
 				signal(ACK_RX, receptionAcquittement);
+				signal(POLL_RX, SIG_IGN);
 				pause();
 			break;
 		}

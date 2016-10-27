@@ -18,7 +18,7 @@ int main (int argc,char *argv[]){
 	// des exec
 	char *n = argv[4], //nombre de station
 	*nb_polling = argv[5], *delai_polling = argv[6], *delai_min_requete = argv[7],
-	*delai_max_requete = argv[8], iStr[10], ppid[10], pid_St[MAX_ST][10];
+	*delai_max_requete = argv[8], iStr[10], ppid[10], pid_St[MAX_ST+1][10];
 	char **my_env; // Retirer cette ligne cause la levée d'une erreur lors de la compilation
 
 	// Injecte le pid dans une chaîne de caractères pour l'utiliser avec l'exec
@@ -41,7 +41,7 @@ int main (int argc,char *argv[]){
 		exit(1);
 	}
 
-	for(i=1; i <= min(atoi(n), MAX_ST); i++){
+	for(i=1; i <= min(atoi(n), MAX_ST+1); i++){
 		snprintf(iStr, sizeof(iStr), "%d", i);
 
 		// Création d'une station secondaire
@@ -61,8 +61,12 @@ int main (int argc,char *argv[]){
 		}
 	}
 
+	for(;i <= MAX_ST+1; i++){
+		pid_St[i][0] = 0;
+	}
+
 	// Création de la station primaire
-	execle(primaire, primaire, nb_polling, delai_polling, n, pid_St[0], pid_St[1], pid_St[2], pid_St[3], pid_St[4], NULL, my_env);
+	execle(primaire, primaire, nb_polling, delai_polling, n, pid_St[1], pid_St[2], pid_St[3], pid_St[4], pid_St[5], NULL, my_env);
 	perror("Erreur d'execl pour le primaire");
 	exit(1);
 }
