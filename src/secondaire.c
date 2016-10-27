@@ -1,15 +1,12 @@
 #include "polling.h"
 #include "header.h"
 
+void emissionDonnee();
 void invitationEmission();
 void printState();
 void receptionDonnee();
 void requeteEmission();
 void receptionAcquittement();
-void rien(){
-	printState();
-	printf(" Il ne se passe rien\n");
-};
 
 int n = 0, pid_primaire = 0, tab=0, nb_data_req_rx = 0;
 
@@ -62,9 +59,7 @@ int main (int argc,char *argv[]){
 				printState();
 				fprintf(stdout, "\n");
 				signal(DATA_RX, receptionDonnee);
-				kill(pid_primaire, DATA_TX);
-				state = W_ACK;
-				string_state = string_w_ack;
+				emissionDonnee();
 			break;
 			case W_ACK:
 				printState();
@@ -77,7 +72,15 @@ int main (int argc,char *argv[]){
 		}
 	}
 
-	return(EXIT_SUCCESS);
+	fprintf(stdout, "Je suis passé par là, chai pas pourquoi\n");
+	fflush(stdout);
+	exit(1);
+}
+
+void emissionDonnee(){
+	kill(pid_primaire, DATA_TX);
+	state = W_ACK;
+	string_state = string_w_ack;
 }
 
 void invitationEmission(){

@@ -72,7 +72,7 @@ int main (int argc,char **argv){
 
 					for(p=0;p<nombre_pid;p++){
 						if(p != j){
-							kill(tab_secondaire[p], DATA_TX);
+							kill(tab_secondaire[p], ACK_TX);
 						}
 					}
 
@@ -100,5 +100,5 @@ void arriverData(){
 	nb_data_req_rx = 1;
 }
 void printIni(int valeur ){
-	fprintf(stdout,"Prim %s St%d", string_state, valeur);
+	fprintf(stdout,"Prim %s St%d", string_state, valeur+1);
 }

@@ -17,9 +17,9 @@ int main (int argc,char *argv[]){
 	// On ne convertit pas en int car il faudrait les cast à nouveau en char pour les remettre en argument
 	// des exec
 	char *n = argv[4], //nombre de station
-	*nb_polling = argv[5], *delai_polling = argv[6], *delai_min_requete = argv[7],
-	*delai_max_requete = argv[8], iStr[10], ppid[10], pid_St[MAX_ST+1][10];
-	char **my_env; // Retirer cette ligne cause la levée d'une erreur lors de la compilation
+		*nb_polling = argv[5], *delai_polling = argv[6], *delai_min_requete = argv[7],
+		*delai_max_requete = argv[8], iStr[10], ppid[10], pid_St[MAX_ST+1][10];
+	char *my_env[2] = {NULL, NULL}; // Retirer cette ligne cause la levée d'une erreur lors de la compilation
 
 	// Injecte le pid dans une chaîne de caractères pour l'utiliser avec l'exec
 	snprintf(ppid, sizeof(ppid), "%d", getpid());
@@ -42,20 +42,20 @@ int main (int argc,char *argv[]){
 	}
 
 	for(i=1; i <= min(atoi(n), MAX_ST+1); i++){
-		snprintf(iStr, sizeof(iStr), "%d", i);
+		sprintf(iStr+0, "%d", i);
 
 		// Création d'une station secondaire
 		if((pid=fork()) == 0){
 			execle(secondaire, secondaire, iStr, ppid, (char *) 0, my_env);
-			perror("Erreur d'execl pour le secondaire");
+			perror("Erreur d'execle pour le secondaire");
 			exit(1);
 		}else{
-			snprintf(pid_St[i], sizeof(pid_St[i]), "%d", pid);
+			sprintf(pid_St[i], "%d", pid);
 
 			// Création d'un générateur de requête
 			if((pid = fork()) == 0){
 				execle(trafic, trafic, iStr, pid_St[i], delai_min_requete, delai_max_requete, (char *) NULL, my_env);
-				perror("Erreur d'execl pour le trafic");
+				perror("Erreur d'execle pour le trafic");
 				exit(1);
 			}
 		}
@@ -66,7 +66,7 @@ int main (int argc,char *argv[]){
 	}
 
 	// Création de la station primaire
-	execle(primaire, primaire, nb_polling, delai_polling, n, pid_St[1], pid_St[2], pid_St[3], pid_St[4], pid_St[5], NULL, my_env);
-	perror("Erreur d'execl pour le primaire");
+	execle(primaire, primaire, nb_polling, delai_polling, n, pid_St[1], pid_St[2], pid_St[3], pid_St[4], pid_St[5], (char *) NULL, my_env);
+	perror("Erreur d'execle pour le primaire");
 	exit(1);
 }

@@ -8,6 +8,7 @@ int main (int argc, char **argv){
 		exit(1);
 	}
 
+
 	int i = atoi(argv[1]); //numero de la station secondaire
 	int pid_Sti = atoi(argv[2]); // pid de la station secondaire
 
