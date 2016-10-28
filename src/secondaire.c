@@ -43,8 +43,8 @@ int main (int argc,char *argv[]){
 				fprintf(stdout, "\n");
 				signal(DATA_RX, receptionDonnee);
 				signal(DATA_REQ_RX, requeteEmission);
-				// signal(POLL_RX, rien);
 				signal(POLL_RX, SIG_IGN);
+				signal(ACK_RX, SIG_IGN);
 				pause();
 			break;
 			case W_POLL:
@@ -53,18 +53,23 @@ int main (int argc,char *argv[]){
 				signal(DATA_RX, receptionDonnee);
 				signal(DATA_REQ_RX, requeteEmission);
 				signal(POLL_RX, invitationEmission);
+				signal(ACK_RX, SIG_IGN);
 				pause();
 			break;
 			case SD_DATA:
 				printState();
 				fprintf(stdout, "\n");
 				signal(DATA_RX, receptionDonnee);
+				signal(DATA_REQ_RX, requeteEmission);
+				signal(ACK_RX, SIG_IGN);
+				signal(POLL_RX, SIG_IGN);
 				emissionDonnee();
 			break;
 			case W_ACK:
 				printState();
 				fprintf(stdout, "\n");
 				signal(DATA_RX, receptionDonnee);
+				signal(DATA_REQ_RX, requeteEmission);
 				signal(ACK_RX, receptionAcquittement);
 				signal(POLL_RX, SIG_IGN);
 				pause();
