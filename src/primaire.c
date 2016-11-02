@@ -13,8 +13,12 @@ int main (int argc,char **argv){
 
 	int nb_polling = atoi(argv[1]), delai_poll = atoi(argv[2]),
 		n = atoi(argv[3]), i, j, compteur, p, nombre_pid=0,
-		tab_secondaire[MAX_ST];
+		tab_secondaire[MAX_ST], prefixe_length = 4;
 	char *prefixe_fichier;
+
+	if(getenv("LENGTH") != NULL){
+		prefixe_length += atoi(getenv("LENGTH"));
+	}
 
 	for(i=0;i<5;i++){
 		if(argv[4+i][0] != 0)
@@ -26,10 +30,10 @@ int main (int argc,char **argv){
 	}
 
 	if(getenv("PREFIXE") != NULL){
-		prefixe_fichier = malloc(4+sizeof(getenv("PREFIXE")));
-		snprintf(prefixe_fichier, sizeof(prefixe_fichier), "%s", getenv("PREFIXE"));
-		sprintf(prefixe_fichier + strlen(prefixe_fichier), "_prim");
-		stdout = fopen(prefixe_fichier, "w+");
+		prefixe_fichier = malloc(prefixe_length);
+		snprintf(prefixe_fichier, prefixe_length, "%s", getenv("PREFIXE"));
+		strcat(prefixe_fichier, "_prim");
+		stdout = fopen(prefixe_fichier, "a");
 	}
 
 	fprintf(stdout, "Je suis primaire, mes paramètres sont : nb_polling=%d, delai_poll=%d, n=%d\n", nb_polling, delai_poll, n);
@@ -80,6 +84,7 @@ int main (int argc,char **argv){
 		}
 	}
 
+	fflush(stdout);
 	kill(0, SIGKILL); // Tue tous les processus enfants
 
 	return(EXIT_SUCCESS);

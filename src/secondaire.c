@@ -16,18 +16,22 @@ int main (int argc,char *argv[]){
 		error("2 paramètres nécessaires");
 	}
 
-	int i=0;
+	int i=0, prefixe_length = 4;
 	char *prefixe_fichier;
+
+	if(getenv("LENGTH") != NULL){
+		prefixe_length += atoi(getenv("LENGTH"));
+	}
 
 	n = atoi(argv[1]);
 	pid_primaire = atoi(argv[2]);
 	tab=(3*n);
 
 	if(getenv("PREFIXE") != NULL){
-		prefixe_fichier = malloc(4+sizeof(getenv("PREFIXE")));
-		snprintf(prefixe_fichier, sizeof(prefixe_fichier), "%s", getenv("PREFIXE"));
-		sprintf(prefixe_fichier + strlen(prefixe_fichier), "_St");
-		sprintf(prefixe_fichier + strlen(prefixe_fichier), "%s", argv[1]);
+		prefixe_fichier = malloc(prefixe_length);
+		snprintf(prefixe_fichier, prefixe_length, "%s", getenv("PREFIXE"));
+		strcat(prefixe_fichier, "_St");
+		strcat(prefixe_fichier, argv[1]);
 		stdout = fopen(prefixe_fichier, "a");
 	}
 
