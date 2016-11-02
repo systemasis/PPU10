@@ -13,8 +13,7 @@ int n = 0, pid_primaire = 0, tab=0, nb_data_req_rx = 0;
 //station secondaire
 int main (int argc,char *argv[]){
 	if (argc != 3) {
-		perror("2 paramètres nécessaires");
-		exit(1);
+		error("2 paramètres nécessaires");
 	}
 
 	int i=0;
@@ -77,8 +76,6 @@ int main (int argc,char *argv[]){
 		}
 	}
 
-	fprintf(stdout, "Je suis passé par là, chai pas pourquoi\n");
-	fflush(stdout);
 	exit(1);
 }
 
