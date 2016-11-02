@@ -32,7 +32,7 @@ int main (int argc,char **argv){
 		stdout = fopen(prefixe_fichier, "w+");
 	}
 
-	fprintf(stdout, "Je suis primaire, mes paramètres sont : nb_polling=%d, delai_poll=%d, n=%d", nb_polling, delai_poll, n);
+	fprintf(stdout, "Je suis primaire, mes paramètres sont : nb_polling=%d, delai_poll=%d, n=%d\n", nb_polling, delai_poll, n);
 
 	state=W_REQ;
 	string_state=string_w_req;
@@ -54,6 +54,7 @@ int main (int argc,char **argv){
 						fprintf(stdout," Data_RX\n");
 						state=BC_DATA;
 						string_state = string_bc_data;
+						j--; // Sinon la station acquittée ne sera pas la bonne
 					}else{
 						printIni(j);
 						fprintf(stdout," No_Data\n");
@@ -65,7 +66,7 @@ int main (int argc,char **argv){
 
 					for(p=0;p<nombre_pid;p++){
 						if(p != j){
-							kill(tab_secondaire[p], ACK_TX);
+							kill(tab_secondaire[p], DATA_TX);
 						}
 					}
 
