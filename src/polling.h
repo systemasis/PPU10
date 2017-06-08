@@ -49,7 +49,7 @@ char *string_bc_data = "BC_DATA";
 char *string_sd_data = "SD_DATA";
 
 // -----------------------------------------------------
-    void erreur (char *message) {
+    void error (char *message) {
 // -----------------------------------------------------
     perror(message);
     exit (EXIT_FAILURE);
